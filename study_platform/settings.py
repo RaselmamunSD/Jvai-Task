@@ -121,6 +121,25 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# DRF basic configuration
+REST_FRAMEWORK = {
+    # We will use JWT for authentication
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    # Require authentication by default for all views
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    
+}
+
+# drf-spectacular settings for API documentation
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Study Management API',
+    'DESCRIPTION': 'Beginner-friendly Study Management Platform API for flashcards, quizzes, matching items, and notes.',
+    'VERSION': '1.0.0',
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
