@@ -1,0 +1,713 @@
+{
+  "info": {
+    "name": "Study Management API - Complete Collection",
+    "_postman_id": "study-management-api-v1",
+    "description": "Complete Postman collection for all Study Management Platform APIs. Includes authentication and full CRUD operations for Flashcards, Quizzes, Matching Items, and Notes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"testpass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", ""]
+            },
+            "description": "Register a new user account. Returns user details."
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Obtain Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', jsonData.access);",
+                  "    pm.collectionVariables.set('refresh_token', jsonData.refresh);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/token/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "token", ""]
+            },
+            "description": "Login and obtain JWT access and refresh tokens. Automatically saves tokens to collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/token/refresh/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "token", "refresh", ""]
+            },
+            "description": "Refresh the access token using the refresh token."
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for user registration and JWT token management."
+    },
+    {
+      "name": "Flashcards",
+      "item": [
+        {
+          "name": "List All Flashcards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/flashcards/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "flashcards", ""]
+            },
+            "description": "Get all flashcards belonging to the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Flashcard",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"front_text\": \"Capital of France\",\n  \"back_text\": \"Paris\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/flashcards/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "flashcards", ""]
+            },
+            "description": "Create a new flashcard. Requires authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Flashcard by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/flashcards/{{flashcard_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "flashcards", "{{flashcard_id}}", ""]
+            },
+            "description": "Retrieve a specific flashcard by ID. Only returns flashcards owned by the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Flashcard (Full)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"front_text\": \"Capital of Italy\",\n  \"back_text\": \"Rome\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/flashcards/{{flashcard_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "flashcards", "{{flashcard_id}}", ""]
+            },
+            "description": "Update all fields of a flashcard. Requires all fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Flashcard (Partial)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"back_text\": \"Updated answer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/flashcards/{{flashcard_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "flashcards", "{{flashcard_id}}", ""]
+            },
+            "description": "Partially update a flashcard. Only include fields you want to change."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Flashcard",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/flashcards/{{flashcard_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "flashcards", "{{flashcard_id}}", ""]
+            },
+            "description": "Delete a flashcard. Only works for flashcards owned by the authenticated user."
+          },
+          "response": []
+        }
+      ],
+      "description": "CRUD operations for flashcards (front_text, back_text)."
+    },
+    {
+      "name": "Quizzes",
+      "item": [
+        {
+          "name": "List All Quizzes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/quizzes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quizzes", ""]
+            },
+            "description": "Get all quizzes belonging to the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Quiz",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Math Quiz 1\",\n  \"question\": \"What is 2 + 2?\",\n  \"answer\": \"4\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/quizzes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quizzes", ""]
+            },
+            "description": "Create a new quiz. Requires authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Quiz by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/quizzes/{{quiz_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quizzes", "{{quiz_id}}", ""]
+            },
+            "description": "Retrieve a specific quiz by ID. Only returns quizzes owned by the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Quiz (Full)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Math Quiz\",\n  \"question\": \"What is 3 + 3?\",\n  \"answer\": \"6\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/quizzes/{{quiz_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quizzes", "{{quiz_id}}", ""]
+            },
+            "description": "Update all fields of a quiz. Requires all fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Quiz (Partial)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answer\": \"Updated answer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/quizzes/{{quiz_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quizzes", "{{quiz_id}}", ""]
+            },
+            "description": "Partially update a quiz. Only include fields you want to change."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Quiz",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/quizzes/{{quiz_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "quizzes", "{{quiz_id}}", ""]
+            },
+            "description": "Delete a quiz. Only works for quizzes owned by the authenticated user."
+          },
+          "response": []
+        }
+      ],
+      "description": "CRUD operations for quizzes (title, question, answer)."
+    },
+    {
+      "name": "Matching Items",
+      "item": [
+        {
+          "name": "List All Matching Items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/matching-items/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "matching-items", ""]
+            },
+            "description": "Get all matching items belonging to the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Matching Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"left_text\": \"Bonjour\",\n  \"right_text\": \"Hello\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/matching-items/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "matching-items", ""]
+            },
+            "description": "Create a new matching item (e.g., word ↔ meaning). Requires authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Matching Item by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/matching-items/{{matching_item_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "matching-items", "{{matching_item_id}}", ""]
+            },
+            "description": "Retrieve a specific matching item by ID. Only returns items owned by the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Matching Item (Full)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"left_text\": \"Merci\",\n  \"right_text\": \"Thank you\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/matching-items/{{matching_item_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "matching-items", "{{matching_item_id}}", ""]
+            },
+            "description": "Update all fields of a matching item. Requires all fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Matching Item (Partial)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"right_text\": \"Updated meaning\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/matching-items/{{matching_item_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "matching-items", "{{matching_item_id}}", ""]
+            },
+            "description": "Partially update a matching item. Only include fields you want to change."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Matching Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/matching-items/{{matching_item_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "matching-items", "{{matching_item_id}}", ""]
+            },
+            "description": "Delete a matching item. Only works for items owned by the authenticated user."
+          },
+          "response": []
+        }
+      ],
+      "description": "CRUD operations for matching items (left_text ↔ right_text, e.g., word ↔ meaning)."
+    },
+    {
+      "name": "Notes",
+      "item": [
+        {
+          "name": "List All Notes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notes", ""]
+            },
+            "description": "Get all notes belonging to the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Note",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Python Basics\",\n  \"content\": \"Python is a high-level programming language...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notes", ""]
+            },
+            "description": "Create a new note. Requires authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Note by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notes/{{note_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notes", "{{note_id}}", ""]
+            },
+            "description": "Retrieve a specific note by ID. Only returns notes owned by the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Note (Full)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Python Basics\",\n  \"content\": \"Updated content here...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notes/{{note_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notes", "{{note_id}}", ""]
+            },
+            "description": "Update all fields of a note. Requires all fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Note (Partial)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Updated content only\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notes/{{note_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notes", "{{note_id}}", ""]
+            },
+            "description": "Partially update a note. Only include fields you want to change."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Note",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notes/{{note_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notes", "{{note_id}}", ""]
+            },
+            "description": "Delete a note. Only works for notes owned by the authenticated user."
+          },
+          "response": []
+        }
+      ],
+      "description": "CRUD operations for notes (title, content)."
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "flashcard_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "quiz_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "matching_item_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "note_id",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
