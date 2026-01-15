@@ -1,5 +1,5 @@
 """
-URL configuration for study_plaform project.
+URL configuration for study_platform project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -15,13 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.views.generic import RedirectView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    # Root URL redirects to API docs
+    path('', RedirectView.as_view(url='/api/docs/', permanent=False), name='root'),
+    
     path('admin/', admin.site.urls),
 
-
-     #Swagger UI
+    # Swagger UI
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
 

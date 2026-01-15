@@ -1,8 +1,5 @@
 ## Study Management Platform Backend (Django REST Framework)
 
-This is a beginner-friendly backend for a Study Management Platform.
-It exposes a simple REST API for:
-
 - User registration and JWT authentication
 - Flashcards (front/back)
 - Quizzes (question/answer)
