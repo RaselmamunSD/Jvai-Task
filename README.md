@@ -70,7 +70,6 @@ Server will run on `http://127.0.0.1:8000/` by default.
 ### 3. Important URLs
 
 - **Swagger UI (auto docs)**: `http://127.0.0.1:8000/api/docs/`
-- **OpenAPI schema JSON**: `http://127.0.0.1:8000/api/schema/`
 
 Authentication and CRUD endpoints are under the `/api/` prefix:
 
